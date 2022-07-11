@@ -9,7 +9,7 @@ const PROPERTIES = {
 } 
 
 function manageCell(e){
-	console.log(e.currentTarget.dataset.column);
+	e.currentTarget.className = 'food-dot';
 }
 
 function getKey(e){
@@ -17,6 +17,7 @@ function getKey(e){
 		case 'ArrowRight':
 		/* 	e.currentTarget.dataset.column
 			e.currentTarget.dataset.row
+			
 			 */
 			break;
 
@@ -47,10 +48,10 @@ function App() {
 		}
 	}
 
-	board.forEach(element => {
-		/* (element.props.dataset.column == PROPERTIES.FOOD_COORDENATES.column) && (element.props.dataset.row == PROPERTIES.FOOD_COORDENATES.row) 
-				? */ element.props.className = PROPERTIES.FORMATING.food /* : null */;
-	});
+/* 	board.forEach(element => {
+	 	( (element.props.dataset.column == PROPERTIES.FOOD_COORDENATES.column) && (element.props.dataset.row == PROPERTIES.FOOD_COORDENATES.row) )
+	 		? element.className = PROPERTIES.FORMATING.food : null ;
+	}); */
 		
 	return (
 		<div className="App">
