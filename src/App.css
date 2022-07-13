@@ -11,7 +11,7 @@ body {
 	height: max-content;
 	border: 1px solid black;
 	display: grid;
-	grid-template-columns: auto auto auto auto auto auto auto auto auto auto;
+	grid-template-columns: repeat(10, auto);
 }
 
 .snake-dot {
