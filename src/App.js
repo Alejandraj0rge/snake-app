@@ -1,5 +1,5 @@
 import './App.css';
-import React, {useReducer, useState, useEffect} from 'react';
+import React, {useReducer, useEffect} from 'react';
 
 const PROPERTIES = {
 	FORMATING: {snake: 'snake-dot', cell: 'dot', food: 'food-dot'},
@@ -8,40 +8,23 @@ const PROPERTIES = {
 	FOOD_COORDENATES: {column: Math.floor(Math.random() * 10), row: Math.floor(Math.random() * 10)}
 } 
 
-function manageCell(e){
-	console.log(e.currentTarget);
-}
-
-function getKey(board, row, e){
-	switch (e.code) {
-		case 'ArrowRight':
-			board.forEach(element => {
-				if(element.props.className == PROPERTIES.FORMATING.snake) {
-					// useEffect(() => {row = row + 1});
-					// {row + 1}
-					// console.log(row);
-				} 
-			});	
-			break;
-
-		case 'ArrowLeft':
-			
-			break;
-
-		case 'ArrowUp':
-			
-			break;
-
-		case 'ArrowDown':
-			
-			break;
-	}
-}
-
 const initialState = {row: 2, column: 4, lenght: 1};
 
-function reducer({row, column, lenght}, action){
-	
+function reducer({row, column}, action){
+	switch (action.code) {
+
+		case 'ArrowRight':
+			return {row: row + 1, column: column};
+
+		case 'ArrowLeft':
+			return {row: row - 1, column: column};
+
+		case 'ArrowUp':
+			return {column: column - 1, row: row};
+
+		case 'ArrowDown':
+			return {column: column + 1, row: row};
+	}
 }
 
 function App() {
@@ -50,19 +33,15 @@ function App() {
 	let board = [];
 
 	useEffect(() => {
-		for(let x = 0; x < PROPERTIES.ROWS; x++) {
-			for(let i = 0; i < PROPERTIES.COLUMNS; i++) {
-				if( (i == PROPERTIES.FOOD_COORDENATES.column) && (x == PROPERTIES.FOOD_COORDENATES.row) ){
-					var formatName = PROPERTIES.FORMATING.food;
-				} else if(i == 3 && x == 5){
-					var formatName = PROPERTIES.FORMATING.snake;
-				} else {
-					var formatName = PROPERTIES.FORMATING.cell;
-				}
-	
-				board.push(<div className={formatName} id={i + '_snake_dot'}  data-column={i} data-row={x} onClick={manageCell}></div>);
-			}
+		let dot = document.getElementById(`${row}${column}_snake_dot`);
+
+		if(dot.className == PROPERTIES.FORMATING.food) {
+			PROPERTIES.FOOD_COORDENATES = {column: Math.floor(Math.random() * 10), row: Math.floor(Math.random() * 10)}
 		}
+	
+		dot.className = PROPERTIES.FORMATING.snake;
+
+		document.getElementById(`${row + 1}${column + 1}_snake_dot`).className = PROPERTIES.FORMATING.snake;
 	});
 
 	for(let x = 0; x < PROPERTIES.ROWS; x++) {
@@ -75,7 +54,7 @@ function App() {
 				var formatName = PROPERTIES.FORMATING.cell;
 			}
 
-			board.push(<div className={formatName} id={i + '_snake_dot'}  data-column={i} data-row={x} onClick={manageCell}></div>);
+			board.push(<div className={formatName} id={`${i}${x}_snake_dot`}  data-column={i} data-row={x}></div>);
 		}
 	}
 
@@ -85,24 +64,10 @@ function App() {
 			<div className='square'>
 				{board}
 			</div>
-			<input onKeyDown={(e) => getKey(board, row, e)}></input>
+			<input onKeyDown={(e) => dispatch({code: e.code, row: row, column: column})}></input>
 		</body>
 		</div>
 	);
 }
  
-
-/* function Example() {
-	const [count, setCount] = useState(0);
-  
-	useEffect(() => {    document.title = `You clicked ${count} times`;  });
-	return (
-	  <div>
-		<p>You clicked {count} times</p>
-		<button onClick={() => setCount(count + 1)}>
-		  Click me
-		</button>
-	  </div>
-	);
-  } */
 export default App;
