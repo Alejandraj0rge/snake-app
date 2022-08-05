@@ -9,9 +9,10 @@ body {
 .square {
 	width:max-content;
 	height: max-content;
-	border: 1px solid black;
+	border: 3px solid black;
 	display: grid;
-	grid-template-columns: repeat(10, auto);
+	grid-template-columns: repeat(20, auto);
+
 }
 
 .snake-dot {
@@ -27,9 +28,23 @@ body {
 }
 
 .dot {
-  border: 1px solid black;
+  /* border: 1px solid black; */
   	/* background-image: linear-gradient(rgb(25, 100, 2), yellow, green); */
 	width: 40px;
 	height: 40px;
+}
+
+.control{
+	font-size: 80px;
+	width: 80px;
+	height: 80px;
+	margin: auto;
+}
+
+.App{
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
 }
 

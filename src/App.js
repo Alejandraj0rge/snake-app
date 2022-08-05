@@ -1,47 +1,60 @@
 import './App.css';
-import React, {useReducer, useEffect} from 'react';
+import React, {useReducer, useEffect, useState} from 'react';
 
 const PROPERTIES = {
 	FORMATING: {snake: 'snake-dot', cell: 'dot', food: 'food-dot'},
-	COLUMNS: 10,
-	ROWS: 10,
-	FOOD_COORDENATES: {column: Math.floor(Math.random() * 10), row: Math.floor(Math.random() * 10)}
+	COLUMNS: 20,
+	ROWS: 20,
+	FOOD_COORDENATES: {column: Math.floor(Math.random() * 20), row: Math.floor(Math.random() * 20)}
 } 
 
-const initialState = {row: 2, column: 4, lenght: 1};
+const initialState = {row: 2, column: 4, lenght: 0, direction: {axis: '', quadrant: ''}};
 
-function reducer({row, column}, action){
+function reducer({row, column, lenght, direction}, action){
 	switch (action.code) {
 
 		case 'ArrowRight':
-			return {row: row + 1, column: column};
+			return {row: row + 1, column: column, direction: {axis: 'row', quadrant: '+'}, lenght: lenght};
 
 		case 'ArrowLeft':
-			return {row: row - 1, column: column};
+			return {row: row - 1, column: column, direction: {axis: 'row', quadrant: '-'}, lenght: lenght};
 
 		case 'ArrowUp':
-			return {column: column - 1, row: row};
+			return {column: column - 1, row: row, direction: {axis: 'column', quadrant: '-'}, lenght: lenght};
 
 		case 'ArrowDown':
-			return {column: column + 1, row: row};
+			return {column: column + 1, row: row, direction: {axis: 'column', quadrant: '+'}, lenght: lenght};
 	}
 }
 
 function App() {
-	const [{row, column, lenght}, dispatch] = useReducer(reducer, initialState);
-
+	const [{row, column, lenght, direction}, dispatch] = useReducer(reducer, initialState);
+	
 	let board = [];
 
 	useEffect(() => {
+		let newLenght = 0;
 		let dot = document.getElementById(`${row}${column}_snake_dot`);
-
 		if(dot.className == PROPERTIES.FORMATING.food) {
-			PROPERTIES.FOOD_COORDENATES = {column: Math.floor(Math.random() * 10), row: Math.floor(Math.random() * 10)}
+			PROPERTIES.FOOD_COORDENATES = {column: Math.floor(Math.random() * PROPERTIES.COLUMNS), row: Math.floor(Math.random() * PROPERTIES.ROWS)}
+			newLenght = lenght + 1;
 		}
-	
-		dot.className = PROPERTIES.FORMATING.snake;
+		
+		dot.className = PROPERTIES.FORMATING.snake;	
+		
+		let coordenates = 0;
+		let newCoordenates = 0;
 
-		document.getElementById(`${row + 1}${column + 1}_snake_dot`).className = PROPERTIES.FORMATING.snake;
+ 		if(direction.axis == 'row'){
+			coordenates = (direction.quadrant == '+') ? `${row - newLenght}${column}`  : `${row + newLenght}${column}`;
+			newCoordenates = (direction.quadrant == '+') ? `${row - newLenght - 1}${column}`  : `${row + newLenght + 1}${column}`;
+		} else {
+			coordenates = (direction.quadrant == '+') ? `${row - newLenght}${column}`  : `${row + newLenght}${column}`;
+			newCoordenates = (direction.quadrant == '+') ? `${row}${column - newLenght - 1}`: `${row}${column + newLenght + 1}`;
+		}
+
+		document.getElementById(`${coordenates}_snake_dot`).className = PROPERTIES.FORMATING.snake;
+		document.getElementById(`${newCoordenates}_snake_dot`).className = PROPERTIES.FORMATING.cell;
 	});
 
 	for(let x = 0; x < PROPERTIES.ROWS; x++) {
@@ -54,7 +67,7 @@ function App() {
 				var formatName = PROPERTIES.FORMATING.cell;
 			}
 
-			board.push(<div className={formatName} id={`${i}${x}_snake_dot`}  data-column={i} data-row={x}></div>);
+			board.push(<div className={formatName} id={`${i}${x}_snake_dot`} data-column={i} data-row={x}></div>);
 		}
 	}
 
@@ -64,7 +77,7 @@ function App() {
 			<div className='square'>
 				{board}
 			</div>
-			<input onKeyDown={(e) => dispatch({code: e.code, row: row, column: column})}></input>
+			<input id="control" placeholder={lenght} className='control' onKeyDown={(e) => dispatch({code: e.code, row: row, column: column, direction: direction, lenght: lenght})}></input>
 		</body>
 		</div>
 	);
