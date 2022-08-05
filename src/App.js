@@ -8,28 +8,28 @@ const PROPERTIES = {
 	FOOD_COORDENATES: {column: Math.floor(Math.random() * 20), row: Math.floor(Math.random() * 20)}
 } 
 
-const initialState = {row: 2, column: 4, lenght: 0, direction: {axis: '', quadrant: ''}};
+const initialState = {row: 2, column: 4, direction: {axis: '', quadrant: ''}};
 
-function reducer({row, column, lenght, direction}, action){
+function reducer({row, column, direction}, action){
 	switch (action.code) {
 
 		case 'ArrowRight':
-			return {row: row + 1, column: column, direction: {axis: 'row', quadrant: '+'}, lenght: lenght};
+			return {row: row + 1, column: column, direction: {axis: 'row', quadrant: '+'}};
 
 		case 'ArrowLeft':
-			return {row: row - 1, column: column, direction: {axis: 'row', quadrant: '-'}, lenght: lenght};
+			return {row: row - 1, column: column, direction: {axis: 'row', quadrant: '-'}};
 
 		case 'ArrowUp':
-			return {column: column - 1, row: row, direction: {axis: 'column', quadrant: '-'}, lenght: lenght};
+			return {column: column - 1, row: row, direction: {axis: 'column', quadrant: '-'}};
 
 		case 'ArrowDown':
-			return {column: column + 1, row: row, direction: {axis: 'column', quadrant: '+'}, lenght: lenght};
+			return {column: column + 1, row: row, direction: {axis: 'column', quadrant: '+'}};
 	}
 }
 
 function App() {
-	const [{row, column, lenght, direction}, dispatch] = useReducer(reducer, initialState);
-	
+	const [{row, column, direction}, dispatch] = useReducer(reducer, initialState);
+	const [lenght, setNewLenght] = useState(0);
 	let board = [];
 
 	useEffect(() => {
@@ -37,7 +37,7 @@ function App() {
 		let dot = document.getElementById(`${row}${column}_snake_dot`);
 		if(dot.className == PROPERTIES.FORMATING.food) {
 			PROPERTIES.FOOD_COORDENATES = {column: Math.floor(Math.random() * PROPERTIES.COLUMNS), row: Math.floor(Math.random() * PROPERTIES.ROWS)}
-			newLenght = lenght + 1;
+			document.getElementById(`control`).placeholder = setNewLenght(lenght + 1);
 		}
 		
 		dot.className = PROPERTIES.FORMATING.snake;	
@@ -77,7 +77,7 @@ function App() {
 			<div className='square'>
 				{board}
 			</div>
-			<input id="control" placeholder={lenght} className='control' onKeyDown={(e) => dispatch({code: e.code, row: row, column: column, direction: direction, lenght: lenght})}></input>
+			<input id="control" placeholder={lenght} className='control' onKeyDown={(e) => dispatch({code: e.code, row: row, column: column, direction: direction})}></input>
 		</body>
 		</div>
 	);
